@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BikeShare</string>
+    <string name="version">Assignment 2</string>
+    <string name="StartDialogTitle">Which ride do you want to start?</string>
+    <string name="EndDialogTitle">Which ride do you want to end?</string>
+
+</resources>

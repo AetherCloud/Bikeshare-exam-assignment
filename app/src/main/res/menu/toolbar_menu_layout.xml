@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" 
+    android:layout_height="10dp"
+    android:layout_width="match_parent"
+    >
+
+    <item
+        android:id="@+id/menu_add"
+        android:icon="@drawable/add_icon"
+        android:title="Add ride"
+        app:showAsAction="ifRoom|withText"
+        />
+    <item
+        android:id="@+id/menu_end"
+        android:icon="@drawable/end_icon"
+        android:title="End ride"
+        app:showAsAction="ifRoom|withText"
+        />
+    <item
+        android:id="@+id/menu_deleteAll"
+        android:icon="@drawable/delete_all_icon"
+        android:title="Delete all items in the list"
+        app:showAsAction="ifRoom|withText"
+        />
+
+
+</menu>

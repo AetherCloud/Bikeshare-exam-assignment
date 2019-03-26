@@ -1,0 +1,75 @@
+<?xml version ="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="25dp"
+    android:background="@android:color/darker_gray"
+    android:id="@+id/background"
+    >
+
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:id="@+id/toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--android:theme="@style/ToolbarTheme"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/relaLayout1">
+
+
+    <Button
+        android:layout_centerInParent="true"
+        android:layout_height="50dp"
+        android:layout_width="200dp"
+        android:text="ADD RIDE"
+        android:textColor="@android:color/black"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:id="@+id/add_button"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:id="@+id/showListCheckbox"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:checked="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <Button
+        android:layout_centerInParent="true"
+        android:layout_height="50dp"
+        android:layout_width="200dp"
+        android:text="END RIDE"
+        android:textColor="@android:color/black"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:id="@+id/end_button"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:text="Show list?"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment"
+        >
+
+    </FrameLayout>
+
+</LinearLayout>
