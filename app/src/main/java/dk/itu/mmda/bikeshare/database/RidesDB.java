@@ -4,7 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-
+@Deprecated
 @Database(entities = {RidesEntity.class}, version = 1, exportSchema = false)
 public abstract class RidesDB extends RoomDatabase {
 

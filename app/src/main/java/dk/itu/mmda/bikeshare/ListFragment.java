@@ -4,6 +4,8 @@ package dk.itu.mmda.bikeshare;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,10 +19,14 @@ import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.UUID;
 
+import dk.itu.mmda.bikeshare.database.Ride;
 import dk.itu.mmda.bikeshare.database.RidesEntity;
 import dk.itu.mmda.bikeshare.database.RidesVM;
+import io.realm.Realm;
 
 
 /**
@@ -32,11 +38,12 @@ public class ListFragment extends Fragment {
 //    private RidesEntity sRidesDB;
     private RideAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private RidesVM mRidesVM;
+    private Realm realm;
+//    private RidesVM mRidesVM;
 
-    public RidesVM getRidesVM(){
-        return mRidesVM;
-    }
+//    public RidesVM getRidesVM(){
+//        return mRidesVM;
+//    }
 
     public ListFragment() {
         // Required empty public constructor
@@ -45,6 +52,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        realm = Realm.getDefaultInstance();
     }
 
 
@@ -58,16 +66,25 @@ public class ListFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mRidesVM = ViewModelProviders.of(getActivity()).get(RidesVM.class);
-        mAdapter = new RideAdapter(mRidesVM.getAllRides().getValue());
+//        mRidesVM = ViewModelProviders.of(getActivity()).get(RidesVM.class);
+        if(mAdapter == null) {
+            mAdapter = new RideAdapter(realm.where(Ride.class).equalTo("mEndRide", "").findAll(), new RideAdapter.rideAdapterInterface(){
+
+                @Override
+                public void updateData() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
+        }
         mRecyclerView.setAdapter(mAdapter);
-        mRidesVM.getAllRides().observe(this, new Observer<List<RidesEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<RidesEntity> rides) {
-                mAdapter.setRides(rides);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
+//        mRidesVM.getAllRides().observe(this, new Observer<List<RidesEntity>>() {
+//            @Override
+//            public void onChanged(@Nullable List<RidesEntity> rides) {
+//                mAdapter.setRides(rides);
+//                mAdapter.notifyDataSetChanged();
+//            }
+//        });
         return view;
     }
 
@@ -102,25 +119,54 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                String tmpWhatText = whatText.getText().toString().trim();
-                String tmpWhereText = whereText.getText().toString().trim();
+                final String tmpWhatText = whatText.getText().toString().trim();
+                final String tmpWhereText = whereText.getText().toString().trim();
                 if(!tmpWhatText.isEmpty() && !tmpWhereText.isEmpty()) {
                     dialog.dismiss();
-                    if (title == getResources().getString(R.string.StartDialogTitle)) {
-//                        sRidesDB.addRide(tmpWhatText, tmpWhereText);
-//                        mRidesVM.insert(new Ride(tmpWhatText, tmpWhereText, ""));
-                        mRidesVM.insert(new RidesEntity(tmpWhatText, tmpWhereText, ""));
-                    } else {
-//                        mRidesVM.insert(new Ride(tmpWhatText, "", tmpWhereText));
-//                        mRidesVM.getRide(tmpWhatText).setEndRide(tmpWhereText);
-                        RidesEntity entity = mRidesVM.getEndableRide(tmpWhatText);
-                        if(entity == null) return; //crashes if entity is not found (entity is null)
 
-                        entity.setBikeEnd(tmpWhereText);
-                        mRidesVM.update(entity);
+                    final Ride newRide = new Ride();
+                    newRide.setPrimKey(UUID.randomUUID().toString());
+                    newRide.setBikeName(tmpWhatText);
+                    newRide.setTimeToCurrent();
+
+                    //Bitmap stuff todo delete later
+                    Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.raytracer);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    newRide.setImage(byteArray);
+
+                    if (title == getResources().getString(R.string.StartDialogTitle)) {
+                        newRide.setStartRide(tmpWhereText);
+                        newRide.setEndRide("");
+                    } else {
+                        newRide.setStartRide("");
+                        newRide.setEndRide(tmpWhereText);
                     }
-                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT)
-                            .show();
+                        realm.executeTransactionAsync(
+                                new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm bgrealm) {
+                                        bgrealm.copyToRealm(newRide);
+
+                                    }
+                                  },
+                                new Realm.Transaction.OnSuccess() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT)
+                                                .show();
+
+                                    }
+                                },
+                                new Realm.Transaction.OnError() {
+                                    @Override
+                                    public void onError(Throwable error) {
+                                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT)
+                                                .show();
+
+                                    }
+                                });
 //                    mAdapter.notifyDataSetChanged();
                 }
             }

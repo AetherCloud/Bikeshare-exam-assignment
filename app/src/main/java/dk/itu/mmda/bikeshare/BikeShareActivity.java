@@ -29,6 +29,8 @@ import java.util.List;
 
 import dk.itu.mmda.bikeshare.database.RidesEntity;
 import dk.itu.mmda.bikeshare.database.RidesVM;
+import io.realm.Realm;
+import io.realm.exceptions.RealmMigrationNeededException;
 
 public class BikeShareActivity extends AppCompatActivity {
 
@@ -36,7 +38,7 @@ public class BikeShareActivity extends AppCompatActivity {
     private Button mAddRide;
     private Button mEndRide;
     private FragmentManager fm;
-    private RidesEntity sRidesDB;
+//    private RidesEntity sRidesDB;
 //    private RideAdapter mAdapter;
     private CheckBox mCheckBox;
     private ListFragment mListFragment;
@@ -50,6 +52,9 @@ public class BikeShareActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bike_share);
+
+        //Realm
+        Realm.init(this);
 
         //checkbox and fragment
         mCheckBox = (CheckBox) findViewById(R.id.showListCheckbox);
@@ -160,7 +165,14 @@ public class BikeShareActivity extends AppCompatActivity {
                 );
                 return true;
             case R.id.menu_deleteAll:
-                mListFragment.getRidesVM().deleteAllRides();
+                Realm.getDefaultInstance().executeTransaction( //By doing this async the app will crash
+                        new Realm.Transaction() {
+                            @Override
+                            public  void execute(Realm bgrealm) {
+                                bgrealm.deleteAll();
+                            }});
+
+//                mListFragment.getRidesVM().deleteAllRides();
                 return true;
 
         }
