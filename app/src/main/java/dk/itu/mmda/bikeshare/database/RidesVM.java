@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+@Deprecated
 public class RidesVM extends AndroidViewModel {
     private RidesRepository mRidesRepository;
     private LiveData<List<RidesEntity>> mAllRides;

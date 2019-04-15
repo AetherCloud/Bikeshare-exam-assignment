@@ -7,11 +7,11 @@ import android.os.AsyncTask;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@Deprecated
 public class RidesRepository {
 
     private RidesDao mRidesDao;
     private LiveData<List<RidesEntity>> mAllRides;
-
     public RidesRepository(Application application){
         RidesDB db = RidesDB.get(application);
         mRidesDao = db.ridesDao();
