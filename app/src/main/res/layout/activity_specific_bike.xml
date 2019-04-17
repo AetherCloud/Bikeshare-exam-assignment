@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SpecificBikeActivity"
+    tools:context=".SpecificBike.SpecificBikeActivity"
     android:orientation="vertical"
     android:background="@color/colorStandardBG"
     >
@@ -16,6 +16,26 @@
         android:layout_marginTop="50dp"
         android:layout_centerHorizontal="true"
         />
+
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/specificBikeFragment"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--/>-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/reserveBikeButton"
+        android:text="Rent this bike"
+        android:background="@color/colorPrimary"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:onClick="reserveBike"
+        android:textSize="44dp"
+        android:textColor="@android:color/white"
+        tools:ignore="OnClick" />
 
 
 </RelativeLayout>

@@ -64,13 +64,13 @@ public class BikeShareActivity extends AppCompatActivity {
         if(mCheckBox.isChecked()) {
             Fragment fragment = mListFragment;
             fm.beginTransaction()
-                    .add(R.id.fragment, fragment)
+                    .add(R.id.listFragment, fragment)
                     .commit();
         }
         else{
             Fragment fragment = new HideListFragment();
             fm.beginTransaction()
-                    .add(R.id.fragment, fragment)
+                    .add(R.id.listFragment, fragment)
                     .commit();
         }
 
@@ -80,13 +80,13 @@ public class BikeShareActivity extends AppCompatActivity {
                if(isChecked) {
                    Fragment fragment = mListFragment;
                    fm.beginTransaction()
-                           .replace(R.id.fragment, fragment)
+                           .replace(R.id.listFragment, fragment)
                            .commit();
                }
                else{
                    Fragment fragment = new HideListFragment();
                    fm.beginTransaction()
-                           .replace(R.id.fragment, fragment)
+                           .replace(R.id.listFragment, fragment)
                            .commit();
                }
            }
@@ -133,6 +133,8 @@ public class BikeShareActivity extends AppCompatActivity {
                 );
             }
         });
+
+        //todo retrive preference
     }
 
 
