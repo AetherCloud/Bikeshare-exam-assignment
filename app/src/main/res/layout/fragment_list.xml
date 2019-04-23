@@ -29,8 +29,9 @@
         -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_recycler_view"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        />
 
 </LinearLayout>

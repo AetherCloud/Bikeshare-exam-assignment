@@ -68,7 +68,7 @@ public class ListFragment extends Fragment {
 
 //        mRidesVM = ViewModelProviders.of(getActivity()).get(RidesVM.class);
         if(mAdapter == null) {
-            mAdapter = new RideAdapter(realm.where(Ride.class).equalTo("mEndRide", "").findAll(), new RideAdapter.rideAdapterInterface(){
+            mAdapter = new RideAdapter(realm.where(Ride.class).equalTo("isFree", true).findAll(), new RideAdapter.rideAdapterInterface(){
 
                 @Override
                 public void updateData() {
@@ -136,7 +136,7 @@ public class ListFragment extends Fragment {
                     byte[] byteArray = stream.toByteArray();
                     newRide.setImage(byteArray);
 
-                    if (title == getResources().getString(R.string.StartDialogTitle)) {
+                    if (title == getResources().getString(R.string.AddBikeDialogTitle)) {
                         newRide.setStartRide(tmpWhereText);
                         newRide.setEndRide("");
                     } else {

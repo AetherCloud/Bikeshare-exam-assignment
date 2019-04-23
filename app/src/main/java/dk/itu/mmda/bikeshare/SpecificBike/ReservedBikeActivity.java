@@ -1,5 +1,6 @@
 package dk.itu.mmda.bikeshare.SpecificBike;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,7 @@ public class ReservedBikeActivity extends AppCompatActivity {
         mRide = getIntent().getParcelableExtra("Ride");
 
         //todo save preference
-        SharedPreferences.Editor editor = getPreferences(this.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences("bikeshareSharedPrefs", this.MODE_PRIVATE).edit();
         editor.putBoolean("isReserving", true);
         editor.putString("rideId", mRide.getPrimKey());
         editor.apply();
@@ -35,6 +36,9 @@ public class ReservedBikeActivity extends AppCompatActivity {
     }
 
     public void endRide(View view) {
+        //Remove shared prefs when ending ride
+        getSharedPreferences("bikeshareSharedPrefs", Context.MODE_PRIVATE).edit().remove("isReserving").remove("rideId").commit();
+
         setResult(getResources().getInteger(R.integer.finishParentActivty));
         finish();
     }

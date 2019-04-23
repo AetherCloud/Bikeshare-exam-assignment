@@ -28,6 +28,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
+
 import java.util.List;
 
 import dk.itu.mmda.bikeshare.SpecificBike.ReservedBikeActivity;
@@ -57,45 +59,47 @@ public class BikeShareActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bike_share);
-
         //Realm
-        Realm.init(this);
+//        Realm.init(this);
 
         //checkbox and fragment
-        mCheckBox = (CheckBox) findViewById(R.id.showListCheckbox);
+//        mCheckBox = (CheckBox) findViewById(R.id.showListCheckbox);
         fm = getSupportFragmentManager();
         mListFragment = new ListFragment();
-
-        if(mCheckBox.isChecked()) {
-            Fragment fragment = mListFragment;
-            fm.beginTransaction()
-                    .add(R.id.listFragment, fragment)
+        fm.beginTransaction()
+                    .add(R.id.listFragment, mListFragment)
                     .commit();
-        }
-        else{
-            Fragment fragment = new HideListFragment();
-            fm.beginTransaction()
-                    .add(R.id.listFragment, fragment)
-                    .commit();
-        }
 
-        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-           @Override
-           public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-               if(isChecked) {
-                   Fragment fragment = mListFragment;
-                   fm.beginTransaction()
-                           .replace(R.id.listFragment, fragment)
-                           .commit();
-               }
-               else{
-                   Fragment fragment = new HideListFragment();
-                   fm.beginTransaction()
-                           .replace(R.id.listFragment, fragment)
-                           .commit();
-               }
-           }
-        });
+//        if(mCheckBox.isChecked()) {
+//            Fragment fragment = mListFragment;
+//            fm.beginTransaction()
+//                    .add(R.id.listFragment, fragment)
+//                    .commit();
+//        }
+//        else{
+//            Fragment fragment = new HideListFragment();
+//            fm.beginTransaction()
+//                    .add(R.id.listFragment, fragment)
+//                    .commit();
+//        }
+
+//        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//           @Override
+//           public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+//               if(isChecked) {
+//                   Fragment fragment = mListFragment;
+//                   fm.beginTransaction()
+//                           .replace(R.id.listFragment, fragment)
+//                           .commit();
+//               }
+//               else{
+//                   Fragment fragment = new HideListFragment();
+//                   fm.beginTransaction()
+//                           .replace(R.id.listFragment, fragment)
+//                           .commit();
+//               }
+//           }
+//        });
 
         // version (made for fun)
         BG = (LinearLayout) findViewById(R.id.background);
@@ -113,43 +117,46 @@ public class BikeShareActivity extends AppCompatActivity {
 
 
         // Buttons
-        mAddRide = (Button) findViewById(R.id.add_button);
-        mEndRide = (Button) findViewById(R.id.end_button);
-        // View products click event
-        mAddRide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListFragment.createDialog(
-                        getResources().getString(R.string.StartDialogTitle),
-                        R.layout.start_dialog,
-                        R.id.start_what,
-                        R.id.start_where
-                );
-            }
-        });
-        mEndRide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListFragment.createDialog(
-                        getResources().getString(R.string.EndDialogTitle),
-                        R.layout.end_dialog,
-                        R.id.end_what,
-                        R.id.end_where
-                );
-            }
-        });
+//        mAddRide = (Button) findViewById(R.id.add_button);
+//        mEndRide = (Button) findViewById(R.id.end_button);
+//        // View products click event
+//        mAddRide.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mListFragment.createDialog(
+//                        getResources().getString(R.string.StartDialogTitle),
+//                        R.layout.start_dialog,
+//                        R.id.start_what,
+//                        R.id.start_where
+//                );
+//            }
+//        });
+//        mEndRide.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mListFragment.createDialog(
+//                        getResources().getString(R.string.EndDialogTitle),
+//                        R.layout.end_dialog,
+//                        R.id.end_what,
+//                        R.id.end_where
+//                );
+//            }
+//        });
 
         //todo retrive preference
         restartReservedRide();
     }
 
+    /**
+     * uses shared preferences to restart ReservedBikeActivity in onCreate
+     */
     private void restartReservedRide(){
-        boolean isReserving = getPreferences(Context.MODE_PRIVATE).getBoolean("isReserving", false);
-        final String rideId = getPreferences(Context.MODE_PRIVATE).getString("RideId", "");
-        Log.e("dk.itu.mmda.bikeshare", isReserving + "; - ;" + rideId + ";;");
+        boolean isReserving = getSharedPreferences("bikeshareSharedPrefs", Context.MODE_PRIVATE).getBoolean("isReserving", false);
+        final String rideId = getSharedPreferences("bikeshareSharedPrefs", Context.MODE_PRIVATE).getString("rideId", "");
+
         if(isReserving && (rideId != "")) {
             final Intent intent = new Intent(this, ReservedBikeActivity.class);
-            Realm.getDefaultInstance().executeTransactionAsync( //By doing this async the app will crash
+            Realm.getDefaultInstance().executeTransaction( //By doing this async the app will crash
                     new Realm.Transaction() {
                         @Override
                         public  void execute(Realm bgrealm) {
@@ -175,7 +182,7 @@ public class BikeShareActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_add:
                 mListFragment.createDialog(
-                        getResources().getString(R.string.StartDialogTitle),
+                        getResources().getString(R.string.AddBikeDialogTitle),
                         R.layout.start_dialog,
                         R.id.start_what,
                         R.id.start_where
@@ -183,21 +190,11 @@ public class BikeShareActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_end:
                 mListFragment.createDialog(
-                        getResources().getString(R.string.EndDialogTitle),
+                        getResources().getString(R.string.RemoveBikeDialogTitle),
                         R.layout.end_dialog,
                         R.id.end_what,
                         R.id.end_where
                 );
-                return true;
-            case R.id.menu_deleteAll:
-                Realm.getDefaultInstance().executeTransaction( //By doing this async the app will crash
-                        new Realm.Transaction() {
-                            @Override
-                            public  void execute(Realm bgrealm) {
-                                bgrealm.deleteAll();
-                            }});
-
-//                mListFragment.getRidesVM().deleteAllRides();
                 return true;
 
         }
