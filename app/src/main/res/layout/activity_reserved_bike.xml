@@ -16,9 +16,15 @@
         />
 
     <Button
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/reserveBikeButton"
+        android:text="End my ride"
+        android:background="@color/colorEndRide"
         android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         android:onClick="endRide"
-        />
+        android:textSize="44dp"
+        android:textColor="@android:color/white"
+        tools:ignore="OnClick" />
 </RelativeLayout>

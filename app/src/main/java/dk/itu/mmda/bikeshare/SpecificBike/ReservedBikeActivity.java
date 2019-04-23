@@ -8,15 +8,24 @@ import android.view.View;
 
 import dk.itu.mmda.bikeshare.BikeShareActivity;
 import dk.itu.mmda.bikeshare.R;
+import dk.itu.mmda.bikeshare.database.Ride;
 
 public class ReservedBikeActivity extends AppCompatActivity {
+
+    Ride mRide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserved_bike);
+        mRide = getIntent().getParcelableExtra("Ride");
+
         //todo save preference
         SharedPreferences.Editor editor = getPreferences(this.MODE_PRIVATE).edit();
+        editor.putBoolean("isReserving", true);
+        editor.putString("rideId", mRide.getPrimKey());
+        editor.apply();
+        //https://learnit.itu.dk/pluginfile.php/239171/mod_resource/content/0/Slides%20%2306.pdf
 
     }
 

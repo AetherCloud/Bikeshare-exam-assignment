@@ -2,7 +2,9 @@ package dk.itu.mmda.bikeshare;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +30,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import dk.itu.mmda.bikeshare.SpecificBike.ReservedBikeActivity;
+import dk.itu.mmda.bikeshare.database.Ride;
 import dk.itu.mmda.bikeshare.database.RidesEntity;
 import dk.itu.mmda.bikeshare.database.RidesVM;
 import io.realm.Realm;
@@ -135,8 +140,26 @@ public class BikeShareActivity extends AppCompatActivity {
         });
 
         //todo retrive preference
+        restartReservedRide();
     }
 
+    private void restartReservedRide(){
+        boolean isReserving = getPreferences(Context.MODE_PRIVATE).getBoolean("isReserving", false);
+        final String rideId = getPreferences(Context.MODE_PRIVATE).getString("RideId", "");
+        Log.e("dk.itu.mmda.bikeshare", isReserving + "; - ;" + rideId + ";;");
+        if(isReserving && (rideId != "")) {
+            final Intent intent = new Intent(this, ReservedBikeActivity.class);
+            Realm.getDefaultInstance().executeTransactionAsync( //By doing this async the app will crash
+                    new Realm.Transaction() {
+                        @Override
+                        public  void execute(Realm bgrealm) {
+                             Ride foundRide = bgrealm.where(Ride.class).equalTo("primKey", rideId).findFirst();
+                            intent.putExtra("Ride", foundRide);
+                        }});
+
+            startActivity(intent);
+        }
+    }
 
 
 

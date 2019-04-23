@@ -22,8 +22,7 @@ public class SpecificBikeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_bike);
 
-        Intent intent = getIntent();
-        mRide = intent.getParcelableExtra("Ride");
+        mRide = getIntent().getParcelableExtra("Ride");
         setTitle(mRide.getBikeName());
 
 
@@ -48,6 +47,7 @@ public class SpecificBikeActivity extends AppCompatActivity {
 
         //todo Check realm if ride is free first
         final Intent intent = new Intent(this, ReservedBikeActivity.class);
+        intent.putExtra("Ride", mRide);
         startActivityForResult(intent, 0);
     }
 
