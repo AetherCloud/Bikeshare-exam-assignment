@@ -1,13 +1,10 @@
 package dk.itu.mmda.bikeshare;
 
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,17 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 import java.util.UUID;
 
 import dk.itu.mmda.bikeshare.database.Ride;
-import dk.itu.mmda.bikeshare.database.RidesEntity;
-import dk.itu.mmda.bikeshare.database.RidesVM;
 import io.realm.Realm;
 
 
