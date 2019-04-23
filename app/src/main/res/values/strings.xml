@@ -3,8 +3,8 @@
     <string name="version">Assignment 2</string>
     <string name="AddBikeDialogTitle">Tell us something about your bike</string>
     <string name="RemoveBikeDialogTitle">Which bike do you want to remove</string>
+    <string name="locationNotEnabled">Location is not enabled</string>
+    <string name="locationEnableNow">Enable now</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

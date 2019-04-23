@@ -10,7 +10,7 @@
             android:id="@+id/start_what"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="What bike?"
+            android:hint="What is the name of the bike?"
              />
 
 
@@ -18,7 +18,7 @@
             android:id="@+id/start_where"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Where to?"
+            android:hint="Where is it located?"
             />
 
 
