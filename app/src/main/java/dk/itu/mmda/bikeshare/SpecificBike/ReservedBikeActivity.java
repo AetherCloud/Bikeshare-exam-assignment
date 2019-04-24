@@ -22,10 +22,10 @@ public class ReservedBikeActivity extends AppCompatActivity {
         mRide = getIntent().getParcelableExtra("Ride");
 
         //todo save preference
-        SharedPreferences.Editor editor = getSharedPreferences("bikeshareSharedPrefs", this.MODE_PRIVATE).edit();
-        editor.putBoolean("isReserving", true);
-        editor.putString("rideId", mRide.getPrimKey());
-        editor.apply();
+        getSharedPreferences("bikeshareSharedPrefs", this.MODE_PRIVATE).edit()
+        .putBoolean("isReserving", true)
+        .putString("rideId", mRide.getPrimKey())
+        .apply();
         //https://learnit.itu.dk/pluginfile.php/239171/mod_resource/content/0/Slides%20%2306.pdf
 
     }

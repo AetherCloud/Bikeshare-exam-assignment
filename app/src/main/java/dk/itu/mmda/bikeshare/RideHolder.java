@@ -14,25 +14,25 @@ import io.realm.Realm;
 
 public class RideHolder extends RecyclerView.ViewHolder {
 
-    private TextView mBikeNameView;
-    private TextView mBikeStartView;
-    private TextView mBikeEndView;
-    private TextView mBikeTimeView;
+    private TextView mNameView;
+    private TextView mAddressView;
+    private TextView mPriceView;
+    private TextView mTypeView;
 
     public RideHolder(LayoutInflater layoutInflater, ViewGroup parent) {
         super(layoutInflater.inflate(R.layout.list_item_ride, parent, false));
-        mBikeNameView = itemView.findViewById(R.id.what_bike_ride);
-        mBikeStartView = itemView.findViewById(R.id.start_ride);
-        mBikeEndView = itemView.findViewById(R.id.end_ride);
-        mBikeTimeView = itemView.findViewById(R.id.ride_time);
+        mNameView = itemView.findViewById(R.id.list_bike_name);
+        mAddressView = itemView.findViewById(R.id.list_bike_address);
+        mTypeView = itemView.findViewById(R.id.list_bike_type);
+        mPriceView = itemView.findViewById(R.id.list_bike_price);
 
     }
 
     public void bind(final Ride ride, final RideAdapter.rideAdapterInterface myInterface) {
-        mBikeNameView.setText(ride.getBikeName());
-        mBikeStartView.setText(ride.getStartRide());
-        mBikeEndView.setText(ride.getEndRide());
-        mBikeTimeView.setText(ride.getTime());
+        mNameView.setText(ride.getBikeName());
+        mAddressView.setText(ride.getAddress());
+        mPriceView.setText(ride.getPricePerMin() + "kr/min");
+        mTypeView.setText(ride.getType());
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,10 +84,10 @@ public class RideHolder extends RecyclerView.ViewHolder {
 
                         }
                             itemBG.setBackgroundColor(color);
-                            mBikeNameView.setBackgroundColor(color);
-                            mBikeStartView.setBackgroundColor(color);
-                            mBikeEndView.setBackgroundColor(color);
-                            mBikeTimeView.setBackgroundColor(color);
+                            mNameView.setBackgroundColor(color);
+                            mAddressView.setBackgroundColor(color);
+                            mTypeView.setBackgroundColor(color);
+                            mPriceView.setBackgroundColor(color);
                     }
                 }
         );

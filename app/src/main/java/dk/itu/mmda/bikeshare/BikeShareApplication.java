@@ -10,5 +10,6 @@ public class BikeShareApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Realm.init(this);
+//        Realm.deleteRealm(Realm.getDefaultConfiguration()); //In case realm gets messed up
     }
 }

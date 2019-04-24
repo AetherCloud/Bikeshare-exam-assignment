@@ -5,6 +5,7 @@
     <string name="RemoveBikeDialogTitle">Which bike do you want to remove</string>
     <string name="locationNotEnabled">Location is not enabled</string>
     <string name="locationEnableNow">Enable now</string>
+    <string name="path">Android/data/dk.itu.mmda.bikeshare/files/Pictures</string>
 
 
 </resources>

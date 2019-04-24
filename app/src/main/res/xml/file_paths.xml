@@ -1,0 +1,3 @@
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="cameraImages" path="Android/data/dk.itu.mmda.bikeshare/files/Pictures" />
+</paths>
