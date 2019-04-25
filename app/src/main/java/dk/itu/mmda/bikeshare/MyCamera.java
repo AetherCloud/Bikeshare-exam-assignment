@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//Source https://medium.com/@rodrigolmti/android-get-camera-thumbnail-and-full-image-1bddfdc5347e
 public class MyCamera {
     private String mCurrentPhotoPath;
     Activity parent;
@@ -27,7 +28,7 @@ public class MyCamera {
 //        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 externalFilesDir      /* directory */
         );
 

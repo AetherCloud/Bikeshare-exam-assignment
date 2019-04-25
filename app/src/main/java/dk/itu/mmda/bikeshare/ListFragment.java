@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,6 +71,7 @@ public class ListFragment extends Fragment {
 //    public RidesVM getRidesVM(){
 //        return mRidesVM;
 //    }
+    private Fragment thisFragment;
 
     public ListFragment() {
         // Required empty public constructor
@@ -79,6 +81,7 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         realm = Realm.getDefaultInstance();
+        thisFragment = this;
     }
 
 
@@ -113,13 +116,7 @@ public class ListFragment extends Fragment {
 
 //        mRidesVM = ViewModelProviders.of(getActivity()).get(RidesVM.class);
         if(mAdapter == null) {
-            mAdapter = new RideAdapter(realm.where(Ride.class).equalTo("isFree", true).findAll(), new RideAdapter.rideAdapterInterface(){
-
-                @Override
-                public void updateData() {
-                    mAdapter.notifyDataSetChanged();
-                }
-            });
+            mAdapter = new RideAdapter(realm.where(Ride.class).equalTo("isFree", true).findAll());
 
         }
         mRecyclerView.setAdapter(mAdapter);
@@ -240,7 +237,16 @@ public class ListFragment extends Fragment {
                                 });
                         stopLocationUpdates();
 
+                        //By notifying and reloading this fragment the user will see the list update when adding a new bike
+                        mAdapter.notifyDataSetChanged();
+                        //https://stackoverflow.com/questions/20702333/refresh-fragment-at-reload
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        if (Build.VERSION.SDK_INT >= 26) {
+                            ft.setReorderingAllowed(false);
+                        }
+                        ft.detach(thisFragment).attach(thisFragment).commit();
                     }
+
                 }
             });
         }

@@ -28,7 +28,7 @@ public class RideHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void bind(final Ride ride, final RideAdapter.rideAdapterInterface myInterface) {
+    public void bind(final Ride ride) {
         mNameView.setText(ride.getBikeName());
         mAddressView.setText(ride.getAddress());
         mPriceView.setText(ride.getPricePerMin() + "kr/min");
