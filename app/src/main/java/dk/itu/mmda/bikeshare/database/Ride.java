@@ -12,14 +12,18 @@ import io.realm.RealmObject;
 public class Ride extends RealmObject implements Parcelable {
     @PrimaryKey
     private String primKey;
-    private String mBikeName;
-    private String mStartRide;
-    private String mEndRide;
-    private String mTime;
+    private String bikeName;
+    private String startTime;
+    private String endTime;
     private boolean isFree = true;
     private byte[] image;
-    private double longitude;
-    private double latitude;
+    private double startLongitude;
+    private double startLatitude;
+    private double endLongitude;
+    private double endLatitude;
+    private double pricePerMin = 0.5; //Default price. A way to change this could be implemented
+    private String type;
+    private String address;
 
 
     public Ride () {
@@ -37,26 +41,34 @@ public class Ride extends RealmObject implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(primKey);
-        parcel.writeString(mBikeName);
-        parcel.writeString(mStartRide);
-        parcel.writeString(mEndRide);
-        parcel.writeString(mTime);
+        parcel.writeString(bikeName);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
         parcel.writeByte((byte) (isFree ? 1 : 0));
         parcel.writeByteArray(image);
-        parcel.writeDouble(longitude);
-        parcel.writeDouble(latitude);
+        parcel.writeDouble(startLongitude);
+        parcel.writeDouble(startLatitude);
+        parcel.writeDouble(endLongitude);
+        parcel.writeDouble(endLatitude);
+        parcel.writeDouble(pricePerMin);
+        parcel.writeString(type);
+        parcel.writeString(address);
     }
 
     protected Ride(Parcel in) {
         primKey = in.readString();
-        mBikeName = in.readString();
-        mStartRide = in.readString();
-        mEndRide = in.readString();
-        mTime = in.readString();
+        bikeName = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
         isFree = in.readByte() != 0;
         image = in.createByteArray();
-        longitude = in.readDouble();
-        latitude = in.readDouble();
+        startLongitude = in.readDouble();
+        startLatitude = in.readDouble();
+        endLongitude = in.readDouble();
+        endLatitude = in.readDouble();
+        pricePerMin = in.readDouble();
+        type = in.readString();
+        address = in.readString();
     }
 
     public static final Creator<Ride> CREATOR = new Creator<Ride>() {
@@ -72,23 +84,15 @@ public class Ride extends RealmObject implements Parcelable {
     };
 
     public String getBikeName() {
-        return mBikeName;
-    }
-    public String getStartRide() { return mStartRide; }
-    public String getEndRide() { return mEndRide; }
-    public String getTime() {
-        return mTime;
+        return bikeName;
     }
 
-    public void setBikeName(String bikeName) { mBikeName = bikeName; }
-    public void setStartRide (String startRide) { mStartRide = startRide; }
-    public void setEndRide(String mEndRide) { this.mEndRide = mEndRide; }
-    public void setTimeToCurrent(){
+    public void setStartTimeToCurrent(){
         Date date = new Date();
         SimpleDateFormat ft =
                 new SimpleDateFormat ("hh:mm - dd.MM.yy");
 
-        mTime = ft.format(date);
+        startTime = ft.format(date);
 
     }
 
@@ -116,22 +120,82 @@ public class Ride extends RealmObject implements Parcelable {
         this.image = image;
     }
 
-    public double getLongitude() {
-        return longitude;
+
+
+    public double getPricePerMin() {
+        return pricePerMin;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setPricePerMin(double pricePerMin) {
+        this.pricePerMin = pricePerMin;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public String getType() {
+        return type;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setType(String type) {
+        this.type = type;
     }
 
+    public void setBikeName(String bikeName) {
+        this.bikeName = bikeName;
+    }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public double getStartLongitude() {
+        return startLongitude;
+    }
+
+    public void setStartLongitude(double startLongitude) {
+        this.startLongitude = startLongitude;
+    }
+
+    public double getStartLatitude() {
+        return startLatitude;
+    }
+
+    public void setStartLatitude(double startLatitude) {
+        this.startLatitude = startLatitude;
+    }
+
+    public double getEndLongitude() {
+        return endLongitude;
+    }
+
+    public void setEndLongitude(double endLongitude) {
+        this.endLongitude = endLongitude;
+    }
+
+    public double getEndLatitude() {
+        return endLatitude;
+    }
+
+    public void setEndLatitude(double endLatitude) {
+        this.endLatitude = endLatitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
 

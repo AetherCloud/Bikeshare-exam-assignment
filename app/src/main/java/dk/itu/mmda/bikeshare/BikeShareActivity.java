@@ -2,8 +2,13 @@ package dk.itu.mmda.bikeshare;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,22 +16,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import dk.itu.mmda.bikeshare.SpecificBike.ReservedBikeActivity;
 import dk.itu.mmda.bikeshare.database.Ride;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.exceptions.RealmMigrationNeededException;
 
 public class BikeShareActivity extends AppCompatActivity {
 
     private static LinearLayout BG;
-    private Button mAddRide;
-    private Button mEndRide;
     private FragmentManager fm;
-//    private RidesEntity sRidesDB;
-//    private RideAdapter mAdapter;
-    private CheckBox mCheckBox;
     private ListFragment mListFragment;
+    private MyCamera mCamera;
 
 //    private boolean showList;
     public static LinearLayout getBG(){
@@ -47,6 +57,9 @@ public class BikeShareActivity extends AppCompatActivity {
         fm.beginTransaction()
                     .add(R.id.listFragment, mListFragment)
                     .commit();
+
+        mCamera = new MyCamera(this);
+
 
 //        if(mCheckBox.isChecked()) {
 //            Fragment fragment = mListFragment;
@@ -138,7 +151,7 @@ public class BikeShareActivity extends AppCompatActivity {
                     new Realm.Transaction() {
                         @Override
                         public  void execute(Realm bgrealm) {
-                             Ride foundRide = bgrealm.where(Ride.class).equalTo("primKey", rideId).findFirst();
+                            Ride foundRide = bgrealm.where(Ride.class).equalTo("primKey", rideId).findFirst();
                             intent.putExtra("Ride", foundRide);
                         }});
 
@@ -159,24 +172,60 @@ public class BikeShareActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_add:
-                mListFragment.createDialog(
-                        getResources().getString(R.string.AddBikeDialogTitle),
-                        R.layout.start_dialog,
-                        R.id.start_what,
-                        R.id.start_where
-                );
+                mListFragment.createAddBikeDialog();
                 return true;
             case R.id.menu_end:
-                mListFragment.createDialog(
-                        getResources().getString(R.string.RemoveBikeDialogTitle),
-                        R.layout.end_dialog,
-                        R.id.end_what,
-                        R.id.end_where
-                );
+                //todo create delete dialog
                 return true;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void TakePicture(View view) {
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        startActivityForResult(intent, 0);
+        Intent i = mCamera.dispatchTakePictureIntent(getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+        startActivityForResult(i, 1);
+    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Bitmap bmp = (Bitmap) data.getExtras().get("data");
+//        mListFragment.setDialogImage(bmp);
+//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        try {
+            if (resultCode == RESULT_OK) {
+                File file = new File(mCamera.getmCurrentPhotoPath());
+                Bitmap bitmap = MediaStore.Images.Media
+                        .getBitmap(this.getContentResolver(), Uri.fromFile(file));
+                if (bitmap != null) {
+                    bitmap = getResizedBitmap(bitmap, 1000);
+                    mListFragment.setDialogImage(bitmap);
+                }
+            }
+
+        } catch (Exception error) {
+            error.printStackTrace();
+        }
+    }
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
 }
