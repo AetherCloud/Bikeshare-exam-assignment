@@ -80,13 +80,6 @@ public class Ride extends RealmObject implements Parcelable {
         return mTime;
     }
 
-    @Deprecated
-    public String toString() {
-        if(mStartRide == "" && mEndRide == "") return "";
-        if(mEndRide == "") return mBikeName + " started here: " + mStartRide;
-        else return mBikeName + " ended here: " + mEndRide;
-    }
-
     public void setBikeName(String bikeName) { mBikeName = bikeName; }
     public void setStartRide (String startRide) { mStartRide = startRide; }
     public void setEndRide(String mEndRide) { this.mEndRide = mEndRide; }

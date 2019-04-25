@@ -1,6 +1,5 @@
 package dk.itu.mmda.bikeshare;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import dk.itu.mmda.bikeshare.database.Ride;
-import dk.itu.mmda.bikeshare.database.RidesEntity;
 
 public class RideAdapter extends RecyclerView.Adapter<RideHolder> {
 //    private List<RidesEntity> mValues;
@@ -48,8 +46,4 @@ public class RideAdapter extends RecyclerView.Adapter<RideHolder> {
         return mValues.size();
     }
 
-    @Deprecated
-    public void setRides(List<Ride> newRides){
-        mValues = newRides;
-    }
 }

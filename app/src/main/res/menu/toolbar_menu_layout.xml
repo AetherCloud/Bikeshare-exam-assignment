@@ -8,19 +8,13 @@
     <item
         android:id="@+id/menu_add"
         android:icon="@drawable/add_icon"
-        android:title="Add ride"
+        android:title="Sign my bike up for bikesharing"
         app:showAsAction="ifRoom|withText"
         />
     <item
         android:id="@+id/menu_end"
         android:icon="@drawable/end_icon"
-        android:title="End ride"
-        app:showAsAction="ifRoom|withText"
-        />
-    <item
-        android:id="@+id/menu_deleteAll"
-        android:icon="@drawable/delete_all_icon"
-        android:title="Delete all items in the list"
+        android:title="Remove my bike from bikesharing"
         app:showAsAction="ifRoom|withText"
         />
 

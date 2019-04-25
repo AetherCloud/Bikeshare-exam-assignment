@@ -1,7 +1,6 @@
 package dk.itu.mmda.bikeshare;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import dk.itu.mmda.bikeshare.SpecificBike.SpecificBikeActivity;
 import dk.itu.mmda.bikeshare.database.Ride;
-import dk.itu.mmda.bikeshare.database.RidesEntity;
 import io.realm.Realm;
 
 public class RideHolder extends RecyclerView.ViewHolder {
@@ -46,7 +45,7 @@ public class RideHolder extends RecyclerView.ViewHolder {
                         new Realm.Transaction() {
                             @Override
                             public  void execute(Realm bgrealm) {
-                                ride.setIsFree(!ride.isFree()); //just for debug TODO delete later
+                                //todo a way to disable onclick for non free rides could be added
                                 intent.putExtra("Ride", ride);
 
 

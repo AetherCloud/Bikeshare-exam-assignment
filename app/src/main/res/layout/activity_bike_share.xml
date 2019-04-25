@@ -9,65 +9,64 @@
     android:id="@+id/background"
     >
 
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@+id/toolbar"-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a bike from the list to rent it"
+        android:gravity="center_horizontal"
+        android:textSize="22dp"
+        />
+    <!--<RelativeLayout-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:theme="@style/ToolbarTheme"/>-->
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/relaLayout1">
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:id="@+id/relaLayout1">-->
 
 
-    <Button
-        android:layout_centerInParent="true"
-        android:layout_height="50dp"
-        android:layout_width="200dp"
-        android:text="ADD RIDE"
-        android:textColor="@android:color/black"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:id="@+id/add_button"/>
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="25dp"
-            android:id="@+id/showListCheckbox"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:checked="true"/>
-    </RelativeLayout>
+    <!--<Button-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:text="ADD RIDE"-->
+        <!--android:textColor="@android:color/black"-->
+        <!--android:backgroundTint="@android:color/holo_red_light"-->
+        <!--android:id="@+id/add_button"/>-->
+        <!--<CheckBox-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="25dp"-->
+            <!--android:id="@+id/showListCheckbox"-->
+            <!--android:scaleX="1.5"-->
+            <!--android:scaleY="1.5"-->
+            <!--android:checked="true"/>-->
+    <!--</RelativeLayout>-->
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal">-->
 
-    <Button
-        android:layout_centerInParent="true"
-        android:layout_height="50dp"
-        android:layout_width="200dp"
-        android:text="END RIDE"
-        android:textColor="@android:color/black"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:id="@+id/end_button"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:text="Show list?"/>
-    </RelativeLayout>
+    <!--<Button-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:text="END RIDE"-->
+        <!--android:textColor="@android:color/black"-->
+        <!--android:backgroundTint="@android:color/holo_red_light"-->
+        <!--android:id="@+id/end_button"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:text="Show list?"/>-->
+    <!--</RelativeLayout>-->
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment"
+        android:id="@+id/listFragment"
         >
 
     </FrameLayout>

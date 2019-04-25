@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">BikeShare</string>
     <string name="version">Assignment 2</string>
-    <string name="StartDialogTitle">Which ride do you want to start?</string>
-    <string name="EndDialogTitle">Which ride do you want to end?</string>
+    <string name="AddBikeDialogTitle">Tell us something about your bike</string>
+    <string name="RemoveBikeDialogTitle">Which bike do you want to remove</string>
+    <string name="locationNotEnabled">Location is not enabled</string>
+    <string name="locationEnableNow">Enable now</string>
+
 
 </resources>
