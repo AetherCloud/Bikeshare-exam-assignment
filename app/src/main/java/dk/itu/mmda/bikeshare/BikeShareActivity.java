@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -134,7 +135,6 @@ public class BikeShareActivity extends AppCompatActivity {
 //            }
 //        });
 
-        //todo retrive preference
         restartReservedRide();
     }
 
@@ -185,6 +185,7 @@ public class BikeShareActivity extends AppCompatActivity {
     public void TakePicture(View view) {
 //        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //        startActivityForResult(intent, 0);
+
         Intent i = mCamera.dispatchTakePictureIntent(getExternalFilesDir(Environment.DIRECTORY_PICTURES));
         startActivityForResult(i, 1);
     }
