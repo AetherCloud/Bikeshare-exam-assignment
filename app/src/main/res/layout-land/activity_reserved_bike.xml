@@ -8,8 +8,6 @@
     android:id="@+id/reserved_bike_BG"
     >
 
-
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

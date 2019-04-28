@@ -44,20 +44,14 @@ public class BikeShareActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bike_share);
-        //Realm
-//        Realm.init(this);
         if(Realm.getDefaultInstance().where(Account.class).count() != 1){ //todo make a way to actually create account
             createStandardAccount();
         }
-        Log.e("dk.itu.mmda.bikeshare","before: "+Realm.getDefaultInstance().where(Account.class).findFirst().getBalance());
         if(Realm.getDefaultInstance().where(Account.class).findFirst().getBalance() <= 50){ //todo make a way to actually create account
             increaseAccountBalance();
         }
-        Log.e("dk.itu.mmda.bikeshare","after: "+Realm.getDefaultInstance().where(Account.class).findFirst().getBalance());
 
 
-        //checkbox and fragment
-//        mCheckBox = (CheckBox) findViewById(R.id.showListCheckbox);
         fm = getSupportFragmentManager();
         mListFragment = new ListFragment();
         fm.beginTransaction()
@@ -67,39 +61,8 @@ public class BikeShareActivity extends AppCompatActivity {
         mCamera = new MyCamera(this);
 
 
-//        if(mCheckBox.isChecked()) {
-//            Fragment fragment = mListFragment;
-//            fm.beginTransaction()
-//                    .add(R.id.listFragment, fragment)
-//                    .commit();
-//        }
-//        else{
-//            Fragment fragment = new HideListFragment();
-//            fm.beginTransaction()
-//                    .add(R.id.listFragment, fragment)
-//                    .commit();
-//        }
-
-//        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//           @Override
-//           public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-//               if(isChecked) {
-//                   Fragment fragment = mListFragment;
-//                   fm.beginTransaction()
-//                           .replace(R.id.listFragment, fragment)
-//                           .commit();
-//               }
-//               else{
-//                   Fragment fragment = new HideListFragment();
-//                   fm.beginTransaction()
-//                           .replace(R.id.listFragment, fragment)
-//                           .commit();
-//               }
-//           }
-//        });
-
         // version (made for fun)
-        BG = (LinearLayout) findViewById(R.id.background);
+        BG = findViewById(R.id.background);
         BG.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -108,37 +71,6 @@ public class BikeShareActivity extends AppCompatActivity {
                 return true;
             }
         });
-        // Database
-//        sRidesDB = RidesEntity.get(this);
-//        List<Ride> values = sRidesDB.getRidesDB();
-
-
-        // Buttons
-//        mAddRide = (Button) findViewById(R.id.add_button);
-//        mEndRide = (Button) findViewById(R.id.end_button);
-//        // View products click event
-//        mAddRide.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mListFragment.createDialog(
-//                        getResources().getString(R.string.StartDialogTitle),
-//                        R.layout.add_bike_dialog,
-//                        R.id.start_what,
-//                        R.id.start_where
-//                );
-//            }
-//        });
-//        mEndRide.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mListFragment.createDialog(
-//                        getResources().getString(R.string.EndDialogTitle),
-//                        R.layout.delete_bike_dialog,
-//                        R.id.end_what,
-//                        R.id.end_where
-//                );
-//            }
-//        });
 
         restartReservedRide();
     }
@@ -222,13 +154,7 @@ public class BikeShareActivity extends AppCompatActivity {
                 .setPositiveButton("Close", null);
         final AlertDialog dialog = builder.create();
 
-//        //Stuff to change size of dialog
-//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//        lp.copyFrom(dialog.getWindow().getAttributes());
-//        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-//        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         dialog.show();
-//        dialog.getWindow().setAttributes(lp);
 
     }
 

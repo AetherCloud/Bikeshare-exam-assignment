@@ -10,21 +10,12 @@ import java.util.List;
 import dk.itu.mmda.bikeshare.Database.Ride;
 
 public class RideAdapter extends RecyclerView.Adapter<RideHolder> {
-//    private List<RidesEntity> mValues;
-//    private rideAdapterInterface mInterface;
     private List<Ride> mValues;
 
     public RideAdapter(List<Ride> values) {
         mValues = values;
-//        mInterface = i;
     }
 
-    //By using an interface the holder can can notifyDataSetChanged from the adapter.
-    // More methods can be added later if needed
-    //Source: https://stackoverflow.com/questions/43433706/best-way-to-notify-recyclerview-adapter-from-viewholder/43434674
-//    interface rideAdapterInterface {
-//        void updateData();
-//    }
 
     @NonNull
     @Override
