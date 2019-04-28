@@ -110,14 +110,8 @@ public class BikeShareActivity extends AppCompatActivity {
 
         if(isReserving && (rideId != "")) {
             final Intent intent = new Intent(this, ReservedBikeActivity.class);
-            Realm.getDefaultInstance().executeTransaction( //By doing this async the app will crash
-                    new Realm.Transaction() {
-                        @Override
-                        public  void execute(Realm bgrealm) {
-                            Ride foundRide = bgrealm.where(Ride.class).equalTo("primKey", rideId).findFirst();
-                            intent.putExtra("Ride", foundRide);
-                        }});
-
+            Ride foundRide = Realm.getDefaultInstance().where(Ride.class).equalTo("primKey", rideId).findFirst();
+            intent.putExtra("Ride", foundRide);
             startActivityForResult(intent, getResources().getInteger(R.integer.notUsedRequest));
         }
     }

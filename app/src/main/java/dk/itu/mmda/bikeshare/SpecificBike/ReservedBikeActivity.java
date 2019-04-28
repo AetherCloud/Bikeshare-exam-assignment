@@ -52,7 +52,6 @@ public class ReservedBikeActivity extends AppCompatActivity {
         mRide = getIntent().getParcelableExtra("Ride");
         setTitle(mRide.getBikeName());
 
-        //todo save preference
         getSharedPreferences("bikeshareSharedPrefs", this.MODE_PRIVATE).edit()
         .putBoolean("isReserving", true)
         .putString("rideId", mRide.getPrimKey())
@@ -85,9 +84,6 @@ public class ReservedBikeActivity extends AppCompatActivity {
 
 
     public void endRide(View view) {
-        //Remove shared prefs when ending ride
-        getSharedPreferences("bikeshareSharedPrefs", Context.MODE_PRIVATE).edit().remove("isReserving").remove("rideId").commit();
-
         setupLocationManager();
         saveLocationAndAddress();
 
@@ -131,7 +127,7 @@ public class ReservedBikeActivity extends AppCompatActivity {
     private void createEndRideDialog(){
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.AddBikeDialogTitle))
+                    .setTitle("Do you want to end this ride?")
                     .setPositiveButton("Ok", null)
                     .setNegativeButton("Cancel", null);
             View endView = LayoutInflater.from(this).inflate(R.layout.end_ride_dialog, (ViewGroup) findViewById(R.id.reserved_bike_BG), false);
@@ -210,6 +206,10 @@ public class ReservedBikeActivity extends AppCompatActivity {
                                 .show();
                         mLocationManager.stopLocationUpdates();
                         dialog.dismiss();
+
+                        //Remove shared prefs when ending ride
+                        getSharedPreferences("bikeshareSharedPrefs", Context.MODE_PRIVATE).edit().remove("isReserving").remove("rideId").apply();
+
                         setResult(getResources().getInteger(R.integer.finishParentActivityResult));
                         finish();
 
