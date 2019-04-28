@@ -15,11 +15,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/reserved_bike_image"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="20dp"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="75dp"
         android:id="@+id/reserveBikeButton"
         android:text="End my ride"
         android:background="@color/colorEndRide"

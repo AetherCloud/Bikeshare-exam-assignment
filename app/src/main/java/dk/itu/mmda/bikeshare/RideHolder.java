@@ -1,5 +1,7 @@
 package dk.itu.mmda.bikeshare;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,7 +41,6 @@ public class RideHolder extends RecyclerView.ViewHolder {
             public void onClick(final View view) {
 
 
-
                 final Intent intent = new Intent(itemView.getContext(), SpecificBikeActivity.class);
                 Realm.getDefaultInstance().executeTransaction( //By doing this async the app will crash
                         new Realm.Transaction() {
@@ -66,7 +67,9 @@ public class RideHolder extends RecyclerView.ViewHolder {
 
                         }
                 );
-                itemView.getContext().startActivity(intent);
+                Activity a = (Activity) itemView.getContext();
+                a.startActivityForResult(intent, a.getResources().getInteger(R.integer.notUsedRequest));
+
                 //onclick done
             }
         });
@@ -92,5 +95,7 @@ public class RideHolder extends RecyclerView.ViewHolder {
                 }
         );
     }
+
+
 
 }
