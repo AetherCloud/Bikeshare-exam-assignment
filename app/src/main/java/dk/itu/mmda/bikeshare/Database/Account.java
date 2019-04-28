@@ -1,4 +1,4 @@
-package dk.itu.mmda.bikeshare.database;
+package dk.itu.mmda.bikeshare.Database;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

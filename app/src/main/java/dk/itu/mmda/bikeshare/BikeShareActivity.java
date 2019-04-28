@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,25 +17,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 import dk.itu.mmda.bikeshare.SpecificBike.ReservedBikeActivity;
-import dk.itu.mmda.bikeshare.database.Account;
-import dk.itu.mmda.bikeshare.database.Ride;
+import dk.itu.mmda.bikeshare.Database.Account;
+import dk.itu.mmda.bikeshare.Database.Ride;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.exceptions.RealmMigrationNeededException;
 
 public class BikeShareActivity extends AppCompatActivity {
 

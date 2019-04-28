@@ -7,18 +7,13 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.Build;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,17 +22,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
-import dk.itu.mmda.bikeshare.BikeShareActivity;
 import dk.itu.mmda.bikeshare.MyLocationManager;
 import dk.itu.mmda.bikeshare.R;
-import dk.itu.mmda.bikeshare.database.Account;
-import dk.itu.mmda.bikeshare.database.Ride;
+import dk.itu.mmda.bikeshare.Database.Account;
+import dk.itu.mmda.bikeshare.Database.Ride;
 import io.realm.Realm;
 
 public class ReservedBikeActivity extends AppCompatActivity {
@@ -208,9 +200,11 @@ public class ReservedBikeActivity extends AppCompatActivity {
                                         r.setStartLatitude(lat);
                                         r.setStartLongitude(lon);
                                         r.setStartTimeToCurrent();
+                                        r.getPayments().add(price);
 
                                         Account a = realm.where(Account.class).findFirst();
                                         a.setBalance(a.getBalance()-price);
+
 
                                     }
                                 }

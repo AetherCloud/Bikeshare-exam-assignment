@@ -1,4 +1,4 @@
-package dk.itu.mmda.bikeshare;
+package dk.itu.mmda.bikeshare.HoldersAndAdapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import dk.itu.mmda.bikeshare.database.Ride;
+import dk.itu.mmda.bikeshare.Database.Ride;
 
 public class RideAdapter extends RecyclerView.Adapter<RideHolder> {
 //    private List<RidesEntity> mValues;
