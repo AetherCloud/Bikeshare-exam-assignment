@@ -4,28 +4,29 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.PersistableBundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import dk.itu.mmda.bikeshare.HoldersAndAdapters.PaymentsAdapter;
+import dk.itu.mmda.bikeshare.HoldersAndAdapters.RideAdapter;
 import dk.itu.mmda.bikeshare.R;
-import dk.itu.mmda.bikeshare.database.Ride;
+import dk.itu.mmda.bikeshare.Database.Ride;
 import io.realm.Realm;
 
 public class SpecificBikeActivity extends AppCompatActivity {
     Ride mRide;
 //    FragmentManager fm;
     Bitmap bmp;
+    PaymentsAdapter paymentsAdapter;
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class SpecificBikeActivity extends AppCompatActivity {
 //        View view = findViewById(R.id.specific_bike_land_view)
 
 
+
+
         mRide = getIntent().getParcelableExtra("Ride");
         setTitle(mRide.getBikeName());
 
@@ -56,6 +59,16 @@ public class SpecificBikeActivity extends AppCompatActivity {
         imageView.setImageBitmap(bmp);
 
 
+        //adapter
+        mRecyclerView = (RecyclerView) findViewById(R.id.payments_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if(paymentsAdapter == null) {
+            paymentsAdapter =
+                    new PaymentsAdapter(Realm.getDefaultInstance()
+                            .where(Ride.class).equalTo("primKey", mRide.getPrimKey())
+                            .findFirst().getPayments());
+        }
+        mRecyclerView.setAdapter(paymentsAdapter);
     }
 
     public void reserveBike(View view) {

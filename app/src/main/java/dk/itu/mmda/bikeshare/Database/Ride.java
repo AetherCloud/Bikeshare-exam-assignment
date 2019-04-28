@@ -1,12 +1,12 @@
-package dk.itu.mmda.bikeshare.database;
+package dk.itu.mmda.bikeshare.Database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -25,6 +25,7 @@ public class Ride extends RealmObject implements Parcelable {
     private double pricePerMin = 0.5; //Default price. A way to change this could be implemented
     private String type;
     private String address;
+    private RealmList<Double> payments;
 
 
 
@@ -203,5 +204,8 @@ public class Ride extends RealmObject implements Parcelable {
     }
 
 
+    public RealmList<Double> getPayments() {
+        return payments;
+    }
 }
 

@@ -30,7 +30,8 @@ import com.google.android.gms.location.LocationServices;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
-import dk.itu.mmda.bikeshare.database.Ride;
+import dk.itu.mmda.bikeshare.HoldersAndAdapters.RideAdapter;
+import dk.itu.mmda.bikeshare.Database.Ride;
 import io.realm.Realm;
 
 
