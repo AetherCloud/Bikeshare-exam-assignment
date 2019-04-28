@@ -11,12 +11,14 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -27,8 +29,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import dk.itu.mmda.bikeshare.SpecificBike.ReservedBikeActivity;
+import dk.itu.mmda.bikeshare.database.Account;
 import dk.itu.mmda.bikeshare.database.Ride;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -52,6 +56,15 @@ public class BikeShareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bike_share);
         //Realm
 //        Realm.init(this);
+        if(Realm.getDefaultInstance().where(Account.class).count() != 1){ //todo make a way to actually create account
+            createStandardAccount();
+        }
+        Log.e("dk.itu.mmda.bikeshare","before: "+Realm.getDefaultInstance().where(Account.class).findFirst().getBalance());
+        if(Realm.getDefaultInstance().where(Account.class).findFirst().getBalance() <= 50){ //todo make a way to actually create account
+            increaseAccountBalance();
+        }
+        Log.e("dk.itu.mmda.bikeshare","after: "+Realm.getDefaultInstance().where(Account.class).findFirst().getBalance());
+
 
         //checkbox and fragment
 //        mCheckBox = (CheckBox) findViewById(R.id.showListCheckbox);
@@ -140,6 +153,32 @@ public class BikeShareActivity extends AppCompatActivity {
         restartReservedRide();
     }
 
+
+    private void createStandardAccount() {
+        final Account account = new Account();
+        account.setAccountId(UUID.randomUUID().toString());
+        account.setName("Random user");
+        Realm.getDefaultInstance().executeTransaction(
+                new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealm(account);
+
+                    }
+                });
+    }
+    private void increaseAccountBalance() { //todo make a better way to add more money to account
+        Realm.getDefaultInstance().executeTransactionAsync(
+                new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Account a = realm.where(Account.class).findFirst();
+                        a.setBalance(a.getBalance()+200);
+                    }
+                }
+        );
+    }
+
     /**
      * uses shared preferences to restart ReservedBikeActivity in onCreate
      */
@@ -176,12 +215,31 @@ public class BikeShareActivity extends AppCompatActivity {
             case R.id.menu_add:
                 mListFragment.createAddBikeDialog();
                 return true;
-            case R.id.menu_end:
-                //todo create delete dialog
+            case R.id.menu_account:
+                createAccountDialog();
                 return true;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void createAccountDialog() {
+        final Account account = Realm.getDefaultInstance().where(Account.class).findFirst();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(account.getName())
+                .setMessage("Current balance: " + account.getBalance()+"kr")
+                .setPositiveButton("Close", null);
+        final AlertDialog dialog = builder.create();
+
+//        //Stuff to change size of dialog
+//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+//        lp.copyFrom(dialog.getWindow().getAttributes());
+//        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        dialog.show();
+//        dialog.getWindow().setAttributes(lp);
+
     }
 
     public void TakePicture(View view) {

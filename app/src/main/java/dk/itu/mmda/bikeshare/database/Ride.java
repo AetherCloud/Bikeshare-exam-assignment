@@ -1,6 +1,5 @@
 package dk.itu.mmda.bikeshare.database;
 
-import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Ride extends RealmObject implements Parcelable {
     @PrimaryKey
