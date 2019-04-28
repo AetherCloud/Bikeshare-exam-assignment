@@ -36,6 +36,7 @@ import java.util.UUID;
 import dk.itu.mmda.bikeshare.BikeShareActivity;
 import dk.itu.mmda.bikeshare.MyLocationManager;
 import dk.itu.mmda.bikeshare.R;
+import dk.itu.mmda.bikeshare.database.Account;
 import dk.itu.mmda.bikeshare.database.Ride;
 import io.realm.Realm;
 
@@ -185,10 +186,7 @@ public class ReservedBikeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    double price = -1;
                     if (lon != null && lat != null && !address.isEmpty()) {
-
-
 
                         final Ride currRide = Realm.getDefaultInstance().where(Ride.class).equalTo("primKey", mRide.getPrimKey()).findFirst();
 
@@ -198,20 +196,21 @@ public class ReservedBikeActivity extends AppCompatActivity {
 
                         String now = ft.format(date);
                         long diff = getTimeDifferenceMinutes(currRide.getStartTime(), now);
-                        price = diff * currRide.getPricePerMin(); //todo do something else with this
+                        final double price = diff * currRide.getPricePerMin(); //todo do something else with this
                         Realm.getDefaultInstance().executeTransactionAsync(
                                 new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
                                         Ride r = realm.where(Ride.class).equalTo("primKey", mRide.getPrimKey())
                                                 .findFirst();
-                                        r.setEndTimeToCurrent();
                                         r.setIsFree(true);
                                         r.setAddress(address);
                                         r.setStartLatitude(lat);
                                         r.setStartLongitude(lon);
-                                        r.setBikeName("setfree");
                                         r.setStartTimeToCurrent();
+
+                                        Account a = realm.where(Account.class).findFirst();
+                                        a.setBalance(a.getBalance()-price);
 
                                     }
                                 }

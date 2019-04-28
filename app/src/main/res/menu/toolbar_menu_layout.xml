@@ -12,9 +12,9 @@
         app:showAsAction="ifRoom|withText"
         />
     <item
-        android:id="@+id/menu_end"
-        android:icon="@drawable/end_icon"
-        android:title="Remove my bike from bikesharing"
+        android:id="@+id/menu_account"
+        android:icon="@drawable/account_icon"
+        android:title="My account"
         app:showAsAction="ifRoom|withText"
         />
 

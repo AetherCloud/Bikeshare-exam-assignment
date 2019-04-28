@@ -46,7 +46,7 @@ public class ListFragment extends Fragment {
     private Realm realm;
     private double lon;
     private double lat;
-    private String address;
+    private String address = "";
     private View startView;
     private Bitmap currentBitmap;
     private MyLocationManager mLocationManager;
@@ -182,7 +182,7 @@ public class ListFragment extends Fragment {
                     final String tmpNameText = nameText.getText().toString().trim();
 //                    final String tmpWhereText = whereText.getText().toString().trim();
                     final String tmpTypeText = typeText.getText().toString().trim();
-                    if (!tmpNameText.isEmpty() && !address.isEmpty() && !tmpTypeText.isEmpty()) {
+                    if (!tmpNameText.isEmpty() && address != "" && !tmpTypeText.isEmpty() && currentBitmap != null) {
                         dialog.dismiss();
 
                         final Ride newRide = new Ride();
