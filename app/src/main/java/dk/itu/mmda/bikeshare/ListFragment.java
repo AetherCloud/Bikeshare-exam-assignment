@@ -2,26 +2,19 @@ package dk.itu.mmda.bikeshare;
 
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,17 +23,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.UUID;
 
 import dk.itu.mmda.bikeshare.database.Ride;
@@ -57,14 +44,12 @@ public class ListFragment extends Fragment {
     private RideAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private Realm realm;
-    boolean gps_enabled = false;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
-    private LocationCallback mLocationCallback;
     private double lon;
     private double lat;
     private String address;
     private View startView;
     private Bitmap currentBitmap;
+    private MyLocationManager mLocationManager;
 
 //    private RidesVM mRidesVM;
 
@@ -82,6 +67,7 @@ public class ListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         realm = Realm.getDefaultInstance();
         thisFragment = this;
+        mLocationManager = new MyLocationManager(getActivity());
     }
 
 
@@ -94,7 +80,7 @@ public class ListFragment extends Fragment {
 //        sRidesDB = RidesEntity.get(getActivity());
 
 
-        mLocationCallback = new LocationCallback(){
+        mLocationManager.setmLocationCallback(new LocationCallback(){
 
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -102,13 +88,11 @@ public class ListFragment extends Fragment {
                 for(Location location : locationResult.getLocations()){
                     lon = location.getLongitude();
                     lat = location.getLatitude();
-
-                    Log.e("dk.itu.mmda.bikeshare", "Lon & lat is: " + lon + " _ " + lat);
-                    address = getAddress(lon, lat);
+                    address = mLocationManager.getAddress(lon, lat);
                 }
             }
-        };
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        });
+        mLocationManager.setmFusedLocationProviderClient(LocationServices.getFusedLocationProviderClient(getActivity()));
 
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
@@ -116,8 +100,8 @@ public class ListFragment extends Fragment {
 
 //        mRidesVM = ViewModelProviders.of(getActivity()).get(RidesVM.class);
         if(mAdapter == null) {
-            mAdapter = new RideAdapter(realm.where(Ride.class).equalTo("isFree", true).findAll());
-
+            mAdapter = new RideAdapter(realm.where(Ride.class).findAll());
+//.equalTo("isFree", true)
         }
         mRecyclerView.setAdapter(mAdapter);
 //        mRidesVM.getAllRides().observe(this, new Observer<List<RidesEntity>>() {
@@ -138,19 +122,19 @@ public class ListFragment extends Fragment {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
         requestPermissions(perms, 1011);
-        enableLocation();
+        mLocationManager.enableLocation();
 
-        if (hasPermission(perms[0]) && hasPermission(perms[1]) && gps_enabled) {
+        if (mLocationManager.hasPermission(perms[0]) && mLocationManager.hasPermission(perms[1]) && mLocationManager.isGpsEnabled()) {
 
-            startLocationUpdates();
+            mLocationManager.startLocationUpdates();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setTitle(getResources().getString(R.string.AddBikeDialogTitle))
                     .setPositiveButton("Ok", null)
                     .setNegativeButton("Cancel", null);
-            startView = LayoutInflater.from(getActivity()).inflate(R.layout.start_dialog, (ViewGroup) BikeShareActivity.getBG(), false);
+            startView = LayoutInflater.from(getActivity()).inflate(R.layout.add_bike_dialog, (ViewGroup) BikeShareActivity.getBG(), false);
             final EditText nameText = startView.findViewById(R.id.addBike_name);
-            final EditText whereText = startView.findViewById(R.id.addBike_where);
+//            final EditText whereText = startView.findViewById(R.id.addBike_where);
             final EditText typeText = startView.findViewById(R.id.addBike_type);
             builder.setView(startView);
 
@@ -164,7 +148,7 @@ public class ListFragment extends Fragment {
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    stopLocationUpdates();
+                    mLocationManager.stopLocationUpdates();
                     dialog.cancel();
                 }
             });
@@ -179,13 +163,26 @@ public class ListFragment extends Fragment {
             dialog.show();
             dialog.getWindow().setAttributes(lp);
 
+            //back button
+            dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                    if (i == KeyEvent.KEYCODE_BACK) {
+                        //stop gps when back is pressed, same as cancel
+                        mLocationManager.stopLocationUpdates();
+                        dialog.dismiss();
+                    }
+                    return true;
+                }
+            });
+
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final String tmpNameText = nameText.getText().toString().trim();
-                    final String tmpWhereText = whereText.getText().toString().trim();
+//                    final String tmpWhereText = whereText.getText().toString().trim();
                     final String tmpTypeText = typeText.getText().toString().trim();
-                    if (!tmpNameText.isEmpty() && !tmpWhereText.isEmpty() && !tmpTypeText.isEmpty()) {
+                    if (!tmpNameText.isEmpty() && !address.isEmpty() && !tmpTypeText.isEmpty()) {
                         dialog.dismiss();
 
                         final Ride newRide = new Ride();
@@ -195,7 +192,7 @@ public class ListFragment extends Fragment {
                         newRide.setStartLongitude(lon);
                         newRide.setStartLatitude(lat);
                         newRide.setAddress(address);
-                        stopLocationUpdates();
+                        mLocationManager.stopLocationUpdates();
                         Log.e("dk.itu.mmda.bikeshare", address);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -235,10 +232,10 @@ public class ListFragment extends Fragment {
 
                                     }
                                 });
-                        stopLocationUpdates();
+                        mLocationManager.stopLocationUpdates();
 
                         //By notifying and reloading this fragment the user will see the list update when adding a new bike
-                        mAdapter.notifyDataSetChanged();
+                        mAdapter.notifyDataSetChanged(); //todo this does not work with the first item
                         //https://stackoverflow.com/questions/20702333/refresh-fragment-at-reload
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         if (Build.VERSION.SDK_INT >= 26) {
@@ -346,71 +343,8 @@ public class ListFragment extends Fragment {
 //        }
 //    }
 
-    private boolean hasPermission(String permission) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            return Objects.requireNonNull(getActivity())
-                    .checkSelfPermission(permission) ==
-                    PackageManager.PERMISSION_GRANTED;
-        return true;
-    }
-
-    //source: https://stackoverflow.com/questions/10311834/how-to-check-if-location-services-are-enabled
-    private void enableLocation(){
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
 
 
-        if(!gps_enabled) {
-            // notify user
-            new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.locationNotEnabled)
-                    .setPositiveButton(R.string.locationEnableNow, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            getActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel ,null)
-                            .show();
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startLocationUpdates() {
- /*if (checkPermission())
- return;*/
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(5000);
-//        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
-        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
-    }
-    private void stopLocationUpdates() {
-        mFusedLocationProviderClient
-                .removeLocationUpdates(mLocationCallback);
-    }
-
-    private String getAddress(double longitude, double latitude) {
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            List<Address> addresses =
-                    geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-                Address address = addresses.get(0);
-                stringBuilder.append(address.getAddressLine(0)).append("\n");
-                stringBuilder.append(address.getLocality()).append("\n");
-                stringBuilder.append(address.getPostalCode()).append("\n");
-                stringBuilder.append(address.getCountryName());
-            } else
-                return "No address found";
-        } catch (IOException ex) { }
-        return stringBuilder.toString();
-    }
 
     public void setDialogImage(Bitmap bmp){
         ImageView imageView = startView.findViewById(R.id.start_imageview);
@@ -419,9 +353,16 @@ public class ListFragment extends Fragment {
 
     }
 
+    public RideAdapter getRecyclerviewAdapter(){
+        return mAdapter;
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-//    @Override
+    //    @Override
 //    public void onResume() {
 //        super.onResume();
 //        startLocationUpdates();

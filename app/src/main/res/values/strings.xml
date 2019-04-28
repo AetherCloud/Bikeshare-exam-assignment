@@ -6,6 +6,7 @@
     <string name="locationNotEnabled">Location is not enabled</string>
     <string name="locationEnableNow">Enable now</string>
     <string name="path">Android/data/dk.itu.mmda.bikeshare/files/Pictures</string>
+    <string name="end_ride_dialog_title">Do you want do end this ride?</string>
 
 
 </resources>

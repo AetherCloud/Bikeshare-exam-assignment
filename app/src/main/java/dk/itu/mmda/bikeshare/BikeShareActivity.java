@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -117,7 +119,7 @@ public class BikeShareActivity extends AppCompatActivity {
 //            public void onClick(View view) {
 //                mListFragment.createDialog(
 //                        getResources().getString(R.string.StartDialogTitle),
-//                        R.layout.start_dialog,
+//                        R.layout.add_bike_dialog,
 //                        R.id.start_what,
 //                        R.id.start_where
 //                );
@@ -128,7 +130,7 @@ public class BikeShareActivity extends AppCompatActivity {
 //            public void onClick(View view) {
 //                mListFragment.createDialog(
 //                        getResources().getString(R.string.EndDialogTitle),
-//                        R.layout.end_dialog,
+//                        R.layout.delete_bike_dialog,
 //                        R.id.end_what,
 //                        R.id.end_where
 //                );
@@ -155,7 +157,7 @@ public class BikeShareActivity extends AppCompatActivity {
                             intent.putExtra("Ride", foundRide);
                         }});
 
-            startActivity(intent);
+            startActivityForResult(intent, getResources().getInteger(R.integer.notUsedRequest));
         }
     }
 
@@ -187,7 +189,7 @@ public class BikeShareActivity extends AppCompatActivity {
 //        startActivityForResult(intent, 0);
 
         Intent i = mCamera.dispatchTakePictureIntent(getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-        startActivityForResult(i, 1);
+        startActivityForResult(i, getResources().getInteger(R.integer.cameraRequest));
     }
 
 //    @Override
@@ -198,20 +200,32 @@ public class BikeShareActivity extends AppCompatActivity {
 //    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        int i = 0;
         super.onActivityResult(requestCode, resultCode, intent);
-        try {
-            if (resultCode == RESULT_OK) {
-                File file = new File(mCamera.getmCurrentPhotoPath());
-                Bitmap bitmap = MediaStore.Images.Media
-                        .getBitmap(this.getContentResolver(), Uri.fromFile(file));
-                if (bitmap != null) {
-                    bitmap = getResizedBitmap(bitmap, 1000);
-                    mListFragment.setDialogImage(bitmap);
+        if(requestCode == getResources().getInteger(R.integer.cameraRequest)) { //camera
+            try {
+                if (resultCode == RESULT_OK) {
+                    File file = new File(mCamera.getmCurrentPhotoPath());
+                    Bitmap bitmap = MediaStore.Images.Media
+                            .getBitmap(this.getContentResolver(), Uri.fromFile(file));
+                    if (bitmap != null) {
+                        bitmap = getResizedBitmap(bitmap, getResources().getInteger(R.integer.maxBitmapSize));
+                        mListFragment.setDialogImage(bitmap);
+                    }
                 }
-            }
 
-        } catch (Exception error) {
-            error.printStackTrace();
+            } catch (Exception error) {
+                error.printStackTrace();
+            }
+        }
+        else if(resultCode == getResources().getInteger(R.integer.refreshListResult)){ //restarted ReservedBike
+            mListFragment.getRecyclerviewAdapter().notifyDataSetChanged();
+            //https://stackoverflow.com/questions/20702333/refresh-fragment-at-reload
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            if (Build.VERSION.SDK_INT >= 26) {
+                ft.setReorderingAllowed(false);
+            }
+            ft.detach(mListFragment).attach(mListFragment).commit();
         }
     }
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {

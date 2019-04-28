@@ -4,6 +4,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class Ride extends RealmObject implements Parcelable {
     private double pricePerMin = 0.5; //Default price. A way to change this could be implemented
     private String type;
     private String address;
+
 
 
     public Ride () {
@@ -87,14 +89,7 @@ public class Ride extends RealmObject implements Parcelable {
         return bikeName;
     }
 
-    public void setStartTimeToCurrent(){
-        Date date = new Date();
-        SimpleDateFormat ft =
-                new SimpleDateFormat ("hh:mm - dd.MM.yy");
 
-        startTime = ft.format(date);
-
-    }
 
     public String getPrimKey() {
         return primKey;
@@ -146,16 +141,25 @@ public class Ride extends RealmObject implements Parcelable {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setStartTimeToCurrent(){
+        Date date = new Date();
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("hh:mm - dd.MM.yy");
+
+        startTime = ft.format(date);
+
     }
 
     public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setEndTimeToCurrent() {
+        Date date = new Date();
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("hh:mm - dd.MM.yy");
+
+        endTime = ft.format(date);
     }
 
     public double getStartLongitude() {
@@ -197,5 +201,7 @@ public class Ride extends RealmObject implements Parcelable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+
 }
 

@@ -16,9 +16,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import dk.itu.mmda.bikeshare.R;
 import dk.itu.mmda.bikeshare.database.Ride;
+import io.realm.Realm;
 
 public class SpecificBikeActivity extends AppCompatActivity {
     Ride mRide;
@@ -30,7 +32,7 @@ public class SpecificBikeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //fullscreen image in
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if(isLandscape()){
 //            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             hideSystemUI();
@@ -59,15 +61,35 @@ public class SpecificBikeActivity extends AppCompatActivity {
     public void reserveBike(View view) {
 
         //todo Check realm if ride is free first
+        final Ride realmRide = Realm.getDefaultInstance().where(Ride.class).equalTo("primKey", mRide.getPrimKey()).findFirst();
+        if(realmRide.isFree()){
+            Realm.getDefaultInstance().executeTransaction(
+                    new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            Ride r = realm.where(Ride.class).equalTo("primKey", mRide.getPrimKey()).findFirst();
+                            r.setIsFree(false);
+                            r.setStartTimeToCurrent();
 
-        final Intent intent = new Intent(this, ReservedBikeActivity.class);
-        intent.putExtra("Ride", mRide);
-        startActivityForResult(intent, 0);
+                        }
+                    }
+            );
+            final Intent intent = new Intent(this, ReservedBikeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            intent.putExtra("Ride", mRide);
+            startActivityForResult(intent, getResources().getInteger(R.integer.notUsedRequest));
+            setResult(getResources().getInteger(R.integer.refreshListResult));
+            finish();
+        }
+        else{
+            Toast.makeText(this, "Bike has been rented, too bad", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == getResources().getInteger(R.integer.finishParentActivty)){
+        if(resultCode == getResources().getInteger(R.integer.finishParentActivityResult)){
+            setResult(getResources().getInteger(R.integer.refreshListResult));
             finish();
         }
     }
@@ -99,7 +121,7 @@ public class SpecificBikeActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
+        if (hasFocus && isLandscape()) {
             hideSystemUI();
         }
     }
@@ -113,6 +135,10 @@ public class SpecificBikeActivity extends AppCompatActivity {
             Log.e("dk.itu.mmda.bikeshare","tap");
             return super.onSingleTapUp(e);
         }
+    }
+
+    private boolean isLandscape(){
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }
 

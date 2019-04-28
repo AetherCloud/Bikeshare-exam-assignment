@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="finishParentActivty">1</integer>
+    <integer name="finishParentActivityResult">1</integer>
+    <integer name="refreshListResult">2</integer>
+    <integer name="maxBitmapSize">600</integer>
+    <integer name="notUsedRequest">-1</integer>
+    <integer name="cameraRequest">3</integer>
+
 
 </resources>
