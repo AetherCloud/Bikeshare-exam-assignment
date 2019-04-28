@@ -13,14 +13,6 @@
             android:hint="What is the name of the bike?"
              />
 
-
-        <!--<EditText-->
-            <!--android:id="@+id/addBike_where"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:hint="Where is it located?"-->
-
-            <!--/>-->
         <EditText
             android:id="@+id/addBike_type"
             android:layout_width="match_parent"

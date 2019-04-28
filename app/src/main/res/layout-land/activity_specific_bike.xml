@@ -8,12 +8,6 @@
     android:orientation="horizontal"
     android:background="@color/colorStandardBG"
     >
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/specific_bike_land_view"-->
-        <!--&gt;-->
-
 
     <ImageView
         android:layout_width="match_parent"
@@ -40,26 +34,5 @@
         android:layout_centerHorizontal="true"
         >
     </android.support.v7.widget.RecyclerView>
-    <!--</View>-->
-    <!--<FrameLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/specificBikeFragment"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--/>-->
-
-    <!--<Button-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="100dp"-->
-        <!--android:id="@+id/reserveBikeButton"-->
-        <!--android:text="Rent this bike"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:onClick="reserveBike"-->
-        <!--android:textSize="44dp"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--tools:ignore="OnClick" />-->
 
 </RelativeLayout>

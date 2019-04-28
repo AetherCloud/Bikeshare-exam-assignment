@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +29,8 @@ import com.google.android.gms.location.LocationServices;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
-import dk.itu.mmda.bikeshare.HoldersAndAdapters.RideAdapter;
 import dk.itu.mmda.bikeshare.Database.Ride;
+import dk.itu.mmda.bikeshare.HoldersAndAdapters.RideAdapter;
 import io.realm.Realm;
 
 
@@ -41,7 +40,6 @@ import io.realm.Realm;
 public class ListFragment extends Fragment {
 
 
-//    private RidesEntity sRidesDB;
     private RideAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private Realm realm;
@@ -52,11 +50,6 @@ public class ListFragment extends Fragment {
     private Bitmap currentBitmap;
     private MyLocationManager mLocationManager;
 
-//    private RidesVM mRidesVM;
-
-//    public RidesVM getRidesVM(){
-//        return mRidesVM;
-//    }
     private Fragment thisFragment;
 
     public ListFragment() {
@@ -78,7 +71,6 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-//        sRidesDB = RidesEntity.get(getActivity());
 
 
         mLocationManager.setmLocationCallback(new LocationCallback(){
@@ -96,22 +88,13 @@ public class ListFragment extends Fragment {
         mLocationManager.setmFusedLocationProviderClient(LocationServices.getFusedLocationProviderClient(getActivity()));
 
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
+        mRecyclerView = view.findViewById(R.id.fragment_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-//        mRidesVM = ViewModelProviders.of(getActivity()).get(RidesVM.class);
         if(mAdapter == null) {
-            mAdapter = new RideAdapter(realm.where(Ride.class).findAll());
-//.equalTo("isFree", true)
+            mAdapter = new RideAdapter(realm.where(Ride.class).equalTo("isFree", true).findAll());
         }
         mRecyclerView.setAdapter(mAdapter);
-//        mRidesVM.getAllRides().observe(this, new Observer<List<RidesEntity>>() {
-//            @Override
-//            public void onChanged(@Nullable List<RidesEntity> rides) {
-//                mAdapter.setRides(rides);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        });
         return view;
     }
 
@@ -135,7 +118,6 @@ public class ListFragment extends Fragment {
                     .setNegativeButton("Cancel", null);
             startView = LayoutInflater.from(getActivity()).inflate(R.layout.add_bike_dialog, (ViewGroup) BikeShareActivity.getBG(), false);
             final EditText nameText = startView.findViewById(R.id.addBike_name);
-//            final EditText whereText = startView.findViewById(R.id.addBike_where);
             final EditText typeText = startView.findViewById(R.id.addBike_type);
             builder.setView(startView);
 
@@ -181,7 +163,6 @@ public class ListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     final String tmpNameText = nameText.getText().toString().trim();
-//                    final String tmpWhereText = whereText.getText().toString().trim();
                     final String tmpTypeText = typeText.getText().toString().trim();
                     if (!tmpNameText.isEmpty() && address != "" && !tmpTypeText.isEmpty() && currentBitmap != null) {
                         dialog.dismiss();
@@ -194,7 +175,6 @@ public class ListFragment extends Fragment {
                         newRide.setStartLatitude(lat);
                         newRide.setAddress(address);
                         mLocationManager.stopLocationUpdates();
-                        Log.e("dk.itu.mmda.bikeshare", address);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         currentBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -202,13 +182,6 @@ public class ListFragment extends Fragment {
                         newRide.setImage(byteArray);
 
 
-//                        if (title == getResources().getString(R.string.AddBikeDialogTitle)) {
-//                            newRide.setStartRide(tmpWhereText);
-//                            newRide.setEndRide("");
-//                        } else {
-//                            newRide.setStartRide("");
-//                            newRide.setEndRide(tmpWhereText);
-//                        }
                         realm.executeTransactionAsync(
                                 new Realm.Transaction() {
                                     @Override
@@ -249,100 +222,6 @@ public class ListFragment extends Fragment {
             });
         }
     }
-//    void createDeleteBikeDialog(final String title, int layoutId, int editTextWhatId, int editTextWhereId) {
-//
-//        //permission to use gps
-//        String[] perms =
-//                {Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION};
-//        requestPermissions(perms, 1011);
-//        enableLocation();
-//
-//        if (hasPermission(perms[0]) && hasPermission(perms[1]) && gps_enabled) {
-//
-//
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-//                    .setTitle(title)
-//                    .setPositiveButton("Ok", null)
-//                    .setNegativeButton("Cancel", null);
-//            View viewInflated = LayoutInflater.from(getActivity()).inflate(layoutId, (ViewGroup) BikeShareActivity.getBG(), false);
-//            final EditText whatText = (EditText) viewInflated.findViewById(editTextWhatId);
-//            final EditText whereText = (EditText) viewInflated.findViewById(editTextWhereId);
-//            builder.setView(viewInflated);
-//
-//            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-////                Do nothing here, get overwritten below
-////                The reason being that without the second override, the ok button will always close the dialog
-//                }
-//            });
-//            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.cancel();
-//                }
-//            });
-//
-//            final AlertDialog dialog = builder.create();
-//            dialog.show();
-//            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    final String tmpWhatText = whatText.getText().toString().trim();
-//                    final String tmpWhereText = whereText.getText().toString().trim();
-//                    if (!tmpWhatText.isEmpty() && !tmpWhereText.isEmpty()) {
-//                        dialog.dismiss();
-//
-//                        final Ride newRide = new Ride();
-//                        newRide.setPrimKey(UUID.randomUUID().toString());
-//                        newRide.setBikeName(tmpWhatText);
-//                        newRide.setStartTimeToCurrent();
-//
-//                        //Bitmap stuff todo delete later
-//                        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.raytracer);
-//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                        byte[] byteArray = stream.toByteArray();
-//                        newRide.setImage(byteArray);
-//
-//                        if (title == getResources().getString(R.string.AddBikeDialogTitle)) {
-//                            newRide.setStartRide(tmpWhereText);
-//                            newRide.setEndRide("");
-//                        } else {
-//                            newRide.setStartRide("");
-//                            newRide.setEndRide(tmpWhereText);
-//                        }
-//                        realm.executeTransactionAsync(
-//                                new Realm.Transaction() {
-//                                    @Override
-//                                    public void execute(Realm bgrealm) {
-//                                        bgrealm.copyToRealm(newRide);
-//
-//                                    }
-//                                },
-//                                new Realm.Transaction.OnSuccess() {
-//                                    @Override
-//                                    public void onSuccess() {
-//                                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT)
-//                                                .show();
-//
-//                                    }
-//                                },
-//                                new Realm.Transaction.OnError() {
-//                                    @Override
-//                                    public void onError(Throwable error) {
-//                                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT)
-//                                                .show();
-//
-//                                    }
-//                                });
-////                    mAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//            });
-//        }
-//    }
 
 
 
@@ -363,16 +242,4 @@ public class ListFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    //    @Override
-//    public void onResume() {
-//        super.onResume();
-//        startLocationUpdates();
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        stopLocationUpdates();
-//    }
-    
 }

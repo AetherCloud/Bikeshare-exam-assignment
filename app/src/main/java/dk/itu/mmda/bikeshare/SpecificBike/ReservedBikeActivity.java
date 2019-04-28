@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -116,7 +117,9 @@ public class ReservedBikeActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA};
-        requestPermissions(perms, 1011);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(perms, 1011); //this got mad for some reason, it is fine in ListFragment
+        }
         mLocationManager.enableLocation();
 
         if (mLocationManager.hasPermission(perms[0]) && mLocationManager.hasPermission(perms[1]) && mLocationManager.isGpsEnabled()) {
@@ -152,14 +155,7 @@ public class ReservedBikeActivity extends AppCompatActivity {
             });
 
             final AlertDialog dialog = builder.create();
-
-            //Stuff to change size of dialog
-//            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//            lp.copyFrom(dialog.getWindow().getAttributes());
-//            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-//            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
             dialog.show();
-//            dialog.getWindow().setAttributes(lp);
 
             //back button
             dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -210,50 +206,12 @@ public class ReservedBikeActivity extends AppCompatActivity {
                                 }
                         );
 
-//                        Realm.getDefaultInstance().executeTransactionAsync( //By doing this async the app will crash
-//                                new Realm.Transaction() {
-//                                    @Override
-//                                    public void execute(Realm bgrealm) {
-//                                        Ride currRide = bgrealm.where(Ride.class).equalTo("primKey", mRide.getPrimKey()).findFirst();
-//                                        currRide.setEndTimeToCurrent();
-//                                        r = currRide;
-//                                        long diff = currRide.getStartEndTimeDifference();
-//                                        price = diff * currRide.getPricePerMin();
-//                                    }
-//                                }
-//                        );
-//                    } //todo i think this needs down
                         Toast.makeText(thisActivity, "The ride was in total " + price + "kr", Toast.LENGTH_LONG)
                                 .show();
-//                        mRide.setBikeName("ENDED");
                         mLocationManager.stopLocationUpdates();
                         dialog.dismiss();
                         setResult(getResources().getInteger(R.integer.finishParentActivityResult));
                         finish();
-//                        realm.executeTransactionAsync(
-//                                new Realm.Transaction() {
-//                                    @Override
-//                                    public void execute(Realm bgrealm) {
-//                                        bgrealm.copyToRealm(newRide);
-//
-//                                    }
-//                                },
-//                                new Realm.Transaction.OnSuccess() {
-//                                    @Override
-//                                    public void onSuccess() {
-//                                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT)
-//                                                .show();
-//
-//                                    }
-//                                },
-//                                new Realm.Transaction.OnError() {
-//                                    @Override
-//                                    public void onError(Throwable error) {
-//                                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT)
-//                                                .show();
-//
-//                                    }
-//                                });
 
                     }
                 }
@@ -263,8 +221,8 @@ public class ReservedBikeActivity extends AppCompatActivity {
     public long getTimeDifferenceMinutes(String startTime, String endTime){
         SimpleDateFormat ft =
                 new SimpleDateFormat ("hh:mm - dd.MM.yy");
-        Date start = null;
-        Date end = null;
+        Date start;
+        Date end;
         Long diffMinutes = null;
         try{
             start = ft.parse(startTime);

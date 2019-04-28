@@ -59,8 +59,6 @@ public class MyLocationManager {
 
     @SuppressLint("MissingPermission")
     public void startLocationUpdates() {
- /*if (checkPermission())
- return;*/
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);

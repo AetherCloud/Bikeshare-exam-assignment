@@ -10,8 +10,6 @@ import java.util.List;
 import dk.itu.mmda.bikeshare.Database.Ride;
 
 public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsHolder> {
-//    private List<RidesEntity> mValues;
-//    private rideAdapterInterface mInterface;
     private List<Double> mValues;
 
     public PaymentsAdapter(List<Double> values) {
@@ -31,8 +29,6 @@ public class PaymentsAdapter extends RecyclerView.Adapter<PaymentsHolder> {
         Double payment = mValues.get(position);
         holder.bind(payment);
     }
-
-
 
     @Override
     public int getItemCount() {

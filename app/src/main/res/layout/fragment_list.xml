@@ -9,24 +9,6 @@
     android:id="@+id/background"
     tools:context=".ListFragment"
     >
-    <!--
-    <Button
-        android:layout_gravity="center"
-        android:layout_height="50dp"
-        android:layout_width="200dp"
-        android:text="ADD RIDE"
-        android:textColor="@android:color/black"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:id="@+id/add_button"/>
-    <Button
-        android:layout_gravity="center"
-        android:layout_height="50dp"
-        android:layout_width="200dp"
-        android:text="END RIDE"
-        android:textColor="@android:color/black"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:id="@+id/end_button"/>
-        -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_recycler_view"
         android:layout_width="match_parent"
